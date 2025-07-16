@@ -7,7 +7,8 @@ aws iam create-user --user-name sts-machine-user
 aws iam create-access-key --user-name sts-machine-user --output table
 ```
 
-Copy the access key and secret here
+Copy and paste the access key and secret here
+
 ```sh
 aws configure
 ```
@@ -18,7 +19,7 @@ Then edit credentials file to change away from default profile
 open ~/.aws/credentials 
 ```
 
-Test who you are:
+Test who you are
 
 ```sh
 aws sts get-caller-identity
@@ -41,7 +42,7 @@ chmod u+x bin/deploy
 ./bin/deploy
 ```
 
-## Use new user crednetials and assume role
+## Use new user credentials and assume role
 
 ```sh
 aws iam put-user-policy \
@@ -67,7 +68,7 @@ aws s3 ls --profile assumed
 
 ## Cleanup
 
-tear down your cloudformation stack via the AWS Managemnet Console
+tear down your CloudFormation stack via the AWS Management Console
 
 ```sh
 aws iam delete-user-policy --user-name sts-machine-user --policy-name StsAssumePolicy

@@ -4,3 +4,12 @@ aws cloudformation deploy \
 --template-file template.yaml \
 --stack-name my-sts-fun-stack \
 --capabilities CAPABILITY_IAM
+
+# aws cloudformation deploy - cria uma stack no CloudFormation
+# --template-file - usa o template criado
+# --stack-name - define o nome da stack
+# --capabilities - concede permissao especial para criacao de recursos especificos
+    
+# CAPABILITY_IAM - permissao geral para criar recursos no IAM
+
+# https://docs.aws.amazon.com/cli/latest/reference/cloudformation/deploy.html

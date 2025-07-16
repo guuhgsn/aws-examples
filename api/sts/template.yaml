@@ -1,38 +1,38 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Create a role for us to assume and create a resource we'll have access t
-Parameters:
-  BucketName:
+Description: Create a role for us to assume and create a resource we'll have access t # descricao simples do que o template faz
+Parameters: # criacao de parametros
+  BucketName: # cria uma variavel chamada BucketName
     Type: String
-    Default: "sts-fun-ab-63463"
-Resources:
-  S3Bucket:
-    Type: 'AWS::S3::Bucket'
-    Properties:
-      BucketName: !Ref BucketName
-  StsRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      AssumeRolePolicyDocument:
+    Default: "sts-fun-ab-63463" # cria uma variavel BucketName para armazenar o nome do Bucket
+Resources: # define os recursos que serao criados pelo CloudFormation
+  S3Bucket: # nome logico do recurso que pode ser usado para referenciar
+    Type: 'AWS::S3::Bucket' # define o recurso a ser criado como S3 Bucket
+    Properties: # definicao das propriedades do recurso
+      BucketName: !Ref BucketName # referencia o nome do Bucket
+  StsRole: # nome logico do recurso
+    Type: 'AWS::IAM::Role' # define o recurso a ser criado como uma Role do IAM
+    Properties: # definicao das propriedades do recurso
+      AssumeRolePolicyDocument: # documento de assume role
         Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Principal: 
-              AWS: "arn:aws:iam::982383527471:user/sts-machine-user"
+              AWS: "arn:aws:iam::982383527471:user/sts-machine-user" # usuario que assumira
               #Service:
               #  - s3.amazonaws.com
             Action:
-              - 'sts:AssumeRole'
+              - 'sts:AssumeRole' # o usuario especificado assumira o papel descrito na policy
       Path: /
-      Policies:
-        - PolicyName: s3access
+      Policies: # criacao da policy
+        - PolicyName: s3access # define o nome da policy
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
               - Effect: Allow
-                Action: 's3:*'
+                Action: 's3:*' # acesso total ao S3
                 Resource: [
-                  !Sub "arn:aws:s3:::*",
-                  !Sub "arn:aws:s3:::${BucketName}",
-                  !Sub "arn:aws:s3:::${BucketName}/*"
+                  !Sub "arn:aws:s3:::*", # referencia todos os Buckets
+                  !Sub "arn:aws:s3:::${BucketName}", # usa o valor armazenado na variavel
+                  !Sub "arn:aws:s3:::${BucketName}/*" # referencia todos os objetos dentro do Bucket especificado
                 ]
                 
