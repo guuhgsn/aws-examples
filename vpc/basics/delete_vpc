@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-# VPC IGW SUBNET RT
+# VPC IGW SUBNET RT - ordem de exclusao
 
 # Check if the argument is not provided
+
 if [ -z "$1" ]; then
   echo "Argument not provided."
 else
@@ -33,22 +34,34 @@ else
   export RT_ID="$5"
 fi
 
+# basicamente, faz um loop para verificar se cada argumento armazenado nas variaveis foi informado
 
 # detach the IGW
 aws ec2 detach-internet-gateway --internet-gateway-id $IGW_ID --vpc-id $VPC_ID
 
+# aws ec2 detach-internet-gateway - chama a opcao de desassociar IGW da VPC
+# --internet-gateway-id $IGW_ID - usa o valor armazenado em IGW_ID para especificar o IGW que sera afetado
+# --vpc-id $VPC_ID - usa o valor armazenado em VPC_ID para especificar a VPC que sera afetada
+
 # delete the IGW
 
-# dissaociate subnet
-
+# disassociate subnet
 aws ec2 disassociate-route-table --association-id $ASSOC_ID
+
+# aws ec2 disassociate-route-table - chama a opcao de desassociar RT
+# --association-id $ASSOC_ID - usa o valor armazenado em ASSOC_ID para especificar a RT que sera afetada
 
 # delete subnet
 aws ec2 delete-subnet --subnet-id $SUBNET_ID
+
+# aws ec2 delete-subnet - chama a opcao de exclusao de subnet
+# --subnet-id $SUBNET_ID - usa o valor armazenado em SUBNET_ID para especificar a subnet que sera afetada
 
 # delete route table
 # aws ec2 delete-route-table --route-table-id $RT_ID
 
 # delete vpc
-
 aws ec2 delete-vpc --vpc-id $VPC_ID
+
+# aws ec2 delete-vpc - chama a opcao de exclusao de VPC
+# --vpc-id $VPC_ID - usa o valor armazenado em VPC_ID para especificar a VPC que sera afetada

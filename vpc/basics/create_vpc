@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-set -e
+set -e # encerra a execucao do script se algum comando falhar
 
-# Create our vpc
+## CREATE OUR VPC
 
 VPC_ID=$(aws ec2 create-vpc \
 --cidr-block "172.1.0.0/16" \
@@ -13,10 +13,27 @@ VPC_ID=$(aws ec2 create-vpc \
 
 echo "VPC_ID: $VPC_ID"
 
-# Turn on DNS Hostnames
+# aws ec2 create-vpc - chama a opção de criacao de VPC
+# --cidr-block - define o range de IPs que sera usado pela VPC
+# --tag-specifications - define as tags para a VPC, onde Key sera o Name e Value sera my-vpc-3
+# --region - especifica a regiao onde a VPC sera criada
+# --query - filtra o parametro VpcId que sera retornado pela AWS
+# --output text - exibe a saida no formato de texto simples
+
+# VPC_ID=$ - salva o resultado filtrado em uma variavel chamada VPC_ID
+
+# echo "VPC_ID: $VPC_ID" - exibe na tela o parametro armazenado na variavel VPC_ID
+
+## TURN ON DNS HOSTNAMES
+
 aws ec2 modify-vpc-attribute --vpc-id $VPC_ID --enable-dns-hostnames "{\"Value\":true}"
 
-# create an IGW
+# aws ec2 modify-vpc-attribute - chama a opcao de modificar atributos da VPC
+# --vpc-id $VPC_ID - usa o valor armazenado em VPC_ID para especificar a VPC que sera modificada
+# --enable-dns-hostnames "{\"Value\":true}" - habilita a traducao de nomes
+
+## CREATE AN IGW
+
 IGW_ID=$(aws ec2 create-internet-gateway \
 --query InternetGateway.InternetGatewayId \
 --output text
@@ -24,11 +41,23 @@ IGW_ID=$(aws ec2 create-internet-gateway \
 
 echo "IGW_ID: $IGW_ID"
 
-# attach an IGW
+# aws ec2 create-internet-gateway - chama a opção de criacao de IGW
+# --query InternetGateway.InternetGatewayId - busca o InternetGatewayId retornado pela AWS
+# --output text - exibe a saida no formato de texto simples
+
+# IGW_ID=$ - salva o resultado filtrado em uma variavel chamada IGW_ID
+
+# echo "IGW_ID: $IGW_ID" - exibe na tela o parametro armazenado na variavel IGW_ID
+
+## ATTACH AN IGW
 
 aws ec2 attach-internet-gateway --internet-gateway-id $IGW_ID --vpc-id $VPC_ID
 
-# create a new subnet
+# aws ec2 attach-internet-gateway - chama a opcao de vincular IGW na VPC
+# --internet-gateway-id $IGW_ID - usa o valor armazenado em IGW_ID para especificar o IGW que sera vinculado
+# --vpc-id $VPC_ID - usa o valor armazenado em VPC_ID para especificar a VPC que sera vinculada
+
+## CREATE A NEW SUBNET
 
 SUBNET_ID=$(aws ec2 create-subnet \
 --vpc-id $VPC_ID \
@@ -38,11 +67,39 @@ SUBNET_ID=$(aws ec2 create-subnet \
 
 echo "SUBNET_ID: $SUBNET_ID"
 
-## auto assign IPv4 addresses
+# aws ec2 create-subnet - chama a opcao de criacao de subnet
+# --vpc-id $VPC_ID - usa o valor armazenado em VPC_ID para especificar a VPC que sera vinculada
+# --cidr-block - define o range de IPs que sera usado pela subnet
+# --query Subnet.SubnetId - busca o SubnetId retornado pela AWS
+# --output text - exibe a saida no formato de texto simples
+
+# SUBNET_ID=$ - salva o resultado filtrado em uma variavel chamada SUBNET_ID
+
+# echo "SUBNET_ID: $SUBNET_ID" - exibe na tela o parametro armazenado na variavel SUBNET_ID
+
+## CREATE A ROUTE TABLE
+
+RT_ID=$(aws ec2 create-route-table \
+--vpc-id $VPC_ID \
+--query RouteTable.RouteTableId \
+--output text)
+
+# aws ec2 create-route-table - chama a opcao de criacao de route table
+# --vpc-id $VPC_ID - usa o valor armazenado em VPC_ID para especificar a VPC que sera vinculada
+# --query RouteTable.RouteTableId - busca o RouteTableId retornado pela AWS
+# --output text - exibe a saida no formato de texto simples
+
+# RT_ID=$ - salva o resultado filtrado em uma variavel chamada RT_ID
+
+## AUTO ASSIGN IPV4 ADDRESSES
 
 aws ec2 modify-subnet-attribute --subnet-id $SUBNET_ID --map-public-ip-on-launch
 
-# explicty associate subnet
+# aws ec2 modify-subnet-attribute - chama a opcao de modificar atributos da subnet
+# --subnet-id $SUBNET_ID - usa o valor armazenado em SUBNET_ID para especificar a subnet que sera modificada
+# --map-public-ip-on-launch - habilita a atribuicao automatica de IP Publico
+
+## EXPLICITY ASSOCIATE SUBNET
 
 RT_ID=$(aws ec2 describe-route-tables \
 --filters "Name=vpc-id,Values=$VPC_ID" "Name=association.main,Values=true" \
@@ -50,6 +107,15 @@ RT_ID=$(aws ec2 describe-route-tables \
 --output text)
 
 echo "RT_ID: $RT_ID"
+
+# aws ec2 describe-route-tables - chama a opcao de descrever route tables
+# --filters "Name=vpc-id,Values=$VPC_ID" "Name=association.main,Values=true" - filtra os resultados para encontrar a VPC principal com o ID especificado
+# --query "RouteTables[].RouteTableId[]" - extrai especificamente os IDs das tabelas de rotas (RouteTableId) de uma lista de tabelas de rotas (RouteTables)
+# --output text - exibe a saida no formato de texto simples
+
+# RT_ID=$ - salva o resultado filtrado em uma variavel chamada RT_ID
+
+# echo "RT_ID: $RT_ID" - exibe na tela o parametro armazenado na variavel RT_ID
 
 ASSOC_ID=$(aws ec2 associate-route-table \
 --route-table-id $RT_ID \
@@ -59,12 +125,30 @@ ASSOC_ID=$(aws ec2 associate-route-table \
 
 echo "ASSOC_ID: $ASSOC_ID"
 
-# add a route for our RT to our IGW
+# aws ec2 associate-route-table - chama a opcao de associar route tables
+# --route-table-id $RT_ID - usa o valor armazenado em RT_ID para especificar a Route Table que sera associada
+# --subnet-id $SUBNET_ID - usa o valor armazenado em SUBNET_ID para especificar a subnet onde esta a tabela
+# --query AssociationId - extrai o AssociationId retornado pela AWS
+# --output text - exibe a saida no formato de texto simples
+
+# ASSOC_ID=$ - salva o resultado filtrado em uma variavel chamada ASSOC_ID
+
+# echo "ASSOC_ID: $ASSOC_ID" - exibe na tela o parametro armazenado na variavel ASSOC_ID
+
+## ADD A ROUTE FOR OUR RTB TO OUR IGW
 
 aws ec2 create-route \
 --route-table-id $RT_ID \
 --destination-cidr-block 0.0.0.0/0 \
 --gateway-id $IGW_ID
 
-# Print out delete command
+# aws ec2 create-route - chama a opcao de criar rotas
+# --route-table-id $RT_ID - usa o valor armazenado em RT_ID para especificar a Route Table que sera usada
+# --destination-cidr-block - define o range de IPs que sera usado pela rota
+# --gateway-id $IGW_ID - usa o valor armazenado em IGW_ID para especificar o IGW que sera vinculado
+
+## PRINT OUT DELETE COMMAND
+
 echo "./delete_vpc $VPC_ID $IGW_ID $SUBNET_ID $ASSOC_ID $RT_ID"
+
+# echo "./delete_vpc $VPC_ID $IGW_ID $SUBNET_ID $ASSOC_ID $RT_ID" - define o script que sera executado para deletar uma VPC e seus componentes associados, e os exibe na tela
