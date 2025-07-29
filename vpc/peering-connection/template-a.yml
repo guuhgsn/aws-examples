@@ -1,61 +1,61 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Launch a simple EC2 for use with testing VPCs
-Parameters:
-  InstanceType:
+Description: Launch a simple EC2 for use with testing VPCs # descricao do que faz o template
+Parameters: # define os parametros dos recursos que serao criados
+  InstanceType: # define o tipo da instancia
     Type: String
     Default: t3.micro
-  VpcId:
+  VpcId: # define em qual VPC a instancia sera criada
     Type: String
     Default: vpc-0f79090f630e6439b
-  ImageId:
+  ImageId: # define a imagem de sistema que sera usada
     Type: String
     Default: ami-003c24b59bb839e19
-  SubnetId:
+  SubnetId: # define em qual subnet a instancia sera criada
     Type: String
     Default: subnet-01dbb0df6e753ec6d
-Resources:
+Resources: # especifica quais recursos serao criados
   SSMRole:
-    Type: AWS::IAM::Role
-    Properties:
+    Type: AWS::IAM::Role # cria uma IAM Role
+    Properties: # propriedades da Role
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
-          - Effect: Allow
+          - Effect: Allow # efeito de permissao
             Principal:
-              Service: ec2.amazonaws.com
-            Action: sts:AssumeRole
+              Service: ec2.amazonaws.com # recurso onde sera aplicada
+            Action: sts:AssumeRole # acao de Assume Role
       ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
-  EC2InstanceProfile:
-    Type: AWS::IAM::InstanceProfile
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore # arn do recurso gerenciado
+  EC2InstanceProfile: 
+    Type: AWS::IAM::InstanceProfile # cria um perfil de instancia no IAM
     Properties:
       Roles:
-        - !Ref SSMRole
+        - !Ref SSMRole # mesmas politicas do SSMRole
   MyEC2Instance: 
-    Type: AWS::EC2::Instance
+    Type: AWS::EC2::Instance # cria uma instancia do EC2
     Properties: 
-      IamInstanceProfile: !Ref EC2InstanceProfile
-      InstanceType: !Ref InstanceType
-      ImageId: !Ref ImageId
-      NetworkInterfaces:
+      IamInstanceProfile: !Ref EC2InstanceProfile # usa o perfil definido em EC2InstanceProfile
+      InstanceType: !Ref InstanceType # usa o tipo definido em InstanceType
+      ImageId: !Ref ImageId # usa a imagem definida em ImageId
+      NetworkInterfaces: # configura a interface de rede
         - DeviceIndex: 0
-          SubnetId: !Ref SubnetId
-          AssociatePublicIpAddress: true
+          SubnetId: !Ref SubnetId # usa a subnet definida em SubnetId
+          AssociatePublicIpAddress: true # habilita a associacao automatica de IP Publico
           GroupSet:
-            - !GetAtt SG.GroupId
-          DeleteOnTermination: true
+            - !GetAtt SG.GroupId # usa o grupo de seguranca definido em GroupId
+          DeleteOnTermination: true # a interface sera excluida se a instancia for terminada
   SG:
-    Type: AWS::EC2::SecurityGroup
+    Type: AWS::EC2::SecurityGroup # cria um SG para o EC2
     Properties:
-      GroupDescription: Allow http to client host
-      VpcId: !Ref VpcId
-      SecurityGroupIngress:
-        - IpProtocol: -1
-          FromPort: -1
-          ToPort: -1
-          CidrIp: 0.0.0.0/0
+      GroupDescription: Allow http to client host # descricao do que o SG faz
+      VpcId: !Ref VpcId # usa a VPC definida em VpcId
+      SecurityGroupIngress: # configuracao do trafego de entrada permitido
+        - IpProtocol: -1 # todos os protocolos
+          FromPort: -1 # todas as portas
+          ToPort: -1 # todas as portas
+          CidrIp: 0.0.0.0/0 # permite trafego da internet
       SecurityGroupEgress:
-        - IpProtocol: -1
-          FromPort: -1
-          ToPort: -1
-          CidrIp: 0.0.0.0/0
+        - IpProtocol: -1 # todos os protocolos
+          FromPort: -1 # todas as portas
+          ToPort: -1 # todas as portas
+          CidrIp: 0.0.0.0/0 # permite trafego para a internet
