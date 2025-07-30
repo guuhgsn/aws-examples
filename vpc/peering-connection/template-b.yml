@@ -1,50 +1,59 @@
-AWSTemplateFormatVersion: "2010-09-09"
+AWSTemplateFormatVersion: '2010-09-09'
 Description: Launch a simple EC2 for use with testing VPCs # descricao do que faz o template
-Parameters: # define os parametros dos recursos que serao criados
-  InstanceType: # define o tipo da instancia
+Parameters:
+  # define os parametros dos recursos que serao criados
+  InstanceType:
+    # define o tipo da instancia
     Type: String
     Default: t3.micro
-  VpcId: # define em qual VPC a instancia sera criada
+  VpcId:
+    # define em qual VPC a instancia sera criada
     Type: String
     Default: vpc-003d449b544f34924
-  ImageId: # define a imagem de sistema que sera usada
+  ImageId:
+    # define a imagem de sistema que sera usada
     Type: String
     Default: ami-003c24b59bb839e19
-  SubnetId: # define em qual subnet a instancia sera criada
+  SubnetId:
+    # define em qual subnet a instancia sera criada
     Type: String
     Default: subnet-0e8c3a92552bc42cb
-Resources: # especifica quais recursos serao criados
-  MyEC2Instance: # cria uma instancia do EC2
-    Type: AWS::EC2::Instance 
-    Properties: 
+Resources:
+  # especifica quais recursos serao criados
+  MyEC2Instance:
+    # cria uma instancia do EC2
+    Type: AWS::EC2::Instance
+    Properties:
       InstanceType: !Ref InstanceType # usa o tipo definido em InstanceType
       ImageId: !Ref ImageId # usa a imagem definida em ImageId
-      NetworkInterfaces: # configura a interface de rede
+      NetworkInterfaces:
+        # configura a interface de rede
         - DeviceIndex: 0
           SubnetId: !Ref SubnetId # usa a subnet definida em SubnetId
           AssociatePublicIpAddress: true # habilita a associacao automatica de IP Publico
           GroupSet:
             - !GetAtt SG.GroupId # usa o grupo de seguranca definido em GroupId
           DeleteOnTermination: true # a interface sera excluida se a instancia for terminada
-      UserData:
-        Fn::Base64: |
-          #!/bin/bash
-          yum update -y
-          yum install -y httpd
-          systemctl start httpd
-          systemctl enable httpd
-          echo "<html><body><h1>Hello from Apache on Amazon Linux 2!</h1></body></html>" > /var/www/html/index.html
+      UserData: !Base64 |
+        #!/bin/bash
+        yum update -y
+        yum install -y httpd
+        systemctl start httpd
+        systemctl enable httpd
+        echo "<html><body><h1>Hello from Apache on Amazon Linux 2!</h1></body></html>" > /var/www/html/index.html
   SG:
     Type: AWS::EC2::SecurityGroup # cria um SG para o EC2
     Properties:
       GroupDescription: Allow http to client host # descricao do que o SG faz
       VpcId: !Ref VpcId # usa a VPC definida em VpcId
-      SecurityGroupIngress: # configuracao do trafego de entrada permitido
+      SecurityGroupIngress:
+        # configuracao do trafego de entrada permitido
         - IpProtocol: -1 # todos os protocolos
           FromPort: -1 # todas as portas
           ToPort: -1 # todas as portas
           CidrIp: 0.0.0.0/0 # permite trafego da internet
-      SecurityGroupEgress: # configuracao do trafego de saida permitido
+      SecurityGroupEgress:
+        # configuracao do trafego de saida permitido
         - IpProtocol: -1 # todos os protocolos
           FromPort: -1 # todas as portas
           ToPort: -1 # todas as portas

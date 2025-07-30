@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: "2010-09-09"
+AWSTemplateFormatVersion: '2010-09-09'
 Description: Launch a simple EC2 for use with testing VPCs
 Parameters:
   InstanceType:
@@ -6,7 +6,7 @@ Parameters:
     Default: t3.micro
   VpcId:
     Type: String
-    Default:  vpc-0c287aa836b08939a
+    Default: vpc-0c287aa836b08939a
   ImageId:
     Type: String
     Default: ami-003c24b59bb839e19
@@ -34,9 +34,9 @@ Resources:
     Properties:
       Roles:
         - !Ref SSMRole
-  MyEC2Instance: 
+  MyEC2Instance:
     Type: AWS::EC2::Instance
-    Properties: 
+    Properties:
       IamInstanceProfile: !Ref EC2InstanceProfile
       InstanceType: !Ref InstanceType
       ImageId: !Ref ImageId

@@ -1,7 +1,7 @@
-Version: "2012-10-17"
-Statement: 
-  - Sid: "AccessToS3"
-    Effect: "Allow"
-    Action: "s3:ListBucket"
-    Resource: 
-      - "*"
+Version: '2012-10-17'
+Statement:
+  - Sid: AccessToS3 # "tag" do statement
+    Effect: Allow # efeito de permissao
+    Action: s3:ListBucket # adiciona a permissao de listagem de Buckets do S3
+    Resource:
+      - '*' # permissao de listagem em todos os recursos

@@ -6,3 +6,8 @@ aws iam create-policy-version \
 --policy-arn arn:aws:iam::982383527471:policy/my-fun-policy \
 --policy-document "$(yq -o json policy.yml)" \
 --set-as-default
+
+# aws iam create-policy-version - cria uma nova versao de uma policy ja criada
+# --policy-arn arn:aws:iam::982383527471:policy/my-fun-policy - define a policy que sera atualizada
+# --policy-document "$(yq -o json policy.yml)" - primeiro converte o documento em JSON e entao o define como a policy a ser atribuida
+# --set-as-default - define que essa versao sera a utilizada

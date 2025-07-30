@@ -1,44 +1,44 @@
 Resources:
-  MyUser:
+  MyUser: # cria nome logico do recurso
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-user.html#aws-resource-iam-user-return-values
-    Type: AWS::IAM::User
+    Type: AWS::IAM::User # cria um usuario do IAM
     Properties:
       #UsernName: 'my-cool-user'
       ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/job-function/ViewOnlyAccess
+        - arn:aws:iam::aws:policy/job-function/ViewOnlyAccess # ARN da policy desenvolvida pela AWS
       Policies:
-        - PolicyName: MyCoolPolicy
+        - PolicyName: MyCoolPolicy # nome logico da policy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
-                - Sid: IamListAccess
-                  Effect: Allow
-                  Action:
-                  - 'iam:ListRoles'
-                  - 'iam:ListUsers'
-                  Resource: '*'
+              - Sid: IamListAccess # listagem de acesso
+                Effect: Allow
+                Action:
+                  - iam:ListRoles # listagem de roles
+                  - iam:ListUsers # listagem de usuarios
+                Resource: '*' # acesso a todos os recursos
   MyInlinePolicy:
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-user.html#cfn-iam-user-policies
-    Type: 'AWS::IAM::Policy'
+    Type: AWS::IAM::Policy # cria uma policy no IAM
     Properties:
-      PolicyName: MyInlinePolicy
+      PolicyName: MyInlinePolicy # nome logico da policy
       PolicyDocument:
-        Version: "2012-10-17"
+        Version: '2012-10-17'
         Statement:
-          - Effect: Allow
-            Action: 'ec2:*'
-            Resource: '*'
+          - Effect: Allow 
+            Action: ec2:* # qualquer acao dentro do EC2
+            Resource: '*' # acesso a qualquer recurso
       Users:
-        - !Ref MyUser
+        - !Ref MyUser # referencia o usuario criado acima
   MySecondInlinePolicy:
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-userpolicy.html
-    Type: 'AWS::IAM::UserPolicy'
+    Type: AWS::IAM::UserPolicy # cria uma policy no IAM
     Properties:
-      PolicyName: MySecondInlinePolicy
-      UserName: !Ref MyUser
+      PolicyName: MySecondInlinePolicy # nome logico da policy
+      UserName: !Ref MyUser # referencia o usuario criado acima
       PolicyDocument:
-        Version: "2012-10-17"
+        Version: '2012-10-17'
         Statement:
           - Effect: Allow
-            Action: 's3:*'
-            Resource: '*'
+            Action: s3:* # qualquer acao dentro do S3
+            Resource: '*' # acesso a qualquer recurso
