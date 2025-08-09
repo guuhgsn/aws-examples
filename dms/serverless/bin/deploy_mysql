@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-echo "== deploy rds"
+echo "== deploy rds" # exibe na tela o que faz o script
 
-STACK_NAME="rds-dms-mysql"
+STACK_NAME="rds-dms-mysql" # cria uma variavel que guarda o nome da stack
 
 # https://awscli.amazonaws.com/v2/documentation/api/latest/reference/cloudformation/deploy/index.html
 aws cloudformation deploy \
@@ -12,3 +12,11 @@ aws cloudformation deploy \
 --parameter-overrides VpcId="vpc-08f0ec02f7471b018" Subnets="subnet-0e0fd31733061237d,subnet-0377c6b172e2951d4,subnet-0d8058cb02f147a86" \
 --region ca-central-1 \
 --stack-name $STACK_NAME
+
+# aws cloudformation deploy - chama a opcao de deploy de stack do CloudFormation
+# --template-file cfn/postgres.yaml - usa o template criado
+# --capabilities CAPABILITY_NAMED_IAM - declara que a stack pode criar recursos do IAM com nomes personalizados
+# --no-execute-changeset - revisa e valida as alteracoes antes de aplicar
+# --parameter-overrides - sobrescreve as configuracoes mencionadas no template
+# --region us-east-1 - define a regiao onde o recurso sera criado
+# --stack-name - define o nome da stack

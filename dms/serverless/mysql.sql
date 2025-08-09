@@ -1,3 +1,5 @@
+-- cria uma tabela simples no MySQL para exemplo
+
 CREATE TABLE example_table (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50),

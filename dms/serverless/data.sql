@@ -1,3 +1,5 @@
+-- dados de exemplo para insercao no Postgre
+
 INSERT INTO example_table (name, age, salary, is_active) VALUES
 ('John Doe', 25, 55000.00, true),
 ('Jane Smith', 30, 72000.50, false),

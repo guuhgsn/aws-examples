@@ -1,24 +1,25 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: RDS Postgress
+Description: RDS PostgreSQL # descricao do template
 Parameters:
-  VpcId:
+  # parametros de configuracao
+  VpcId: # salva o VPCID na variavel VpcId
     Type: String
-  Username:
+  Username: # salva o Username na variavel Username e define o nome default como admin
     Type: String
     Default: postgres
-  Password:
+  Password: # salva o Password na variavel Password e define a senha padrao como password
     Type: String
     Default: password
-  BackupRetentionPeriod:
+  BackupRetentionPeriod: # tempo de backup
     Type: Number
-    Default: 0
-  InstanceClass:
+    Default: 0 # 0 = disable
+  InstanceClass: # tipo da instancia do DB
     Type: String
     Default: db.t3.micro
-  Engine:
+  Engine: # motor / tecnologia
     Type: String
     Default: postgres
-  EngineVersion:
+  EngineVersion: # versao a ser usada
     Type: String
     Default: 15.4
   PubliclyAccessible:
@@ -26,79 +27,83 @@ Parameters:
     AllowedValues:
       - true
       - false
-    Default: true
+    Default: true # define que o DB sera acessivel publicamente
   DeletionProtection:
     Type: String
     AllowedValues:
       - true
       - false
-    Default: false
-  RdsDatabaseName:
+    Default: false # desabilita a exclusao protegida
+  RdsDatabaseName: # define o nome do DB como mydatabase
     Type: String
-    Default: "mydatabase"
-  RdsPort:
+    Default: mydatabase
+  RdsPort: # define a porta de rede a ser usada pelo DB como 5432
     Type: Number
     Default: 5432
   Subnets:
-    Type: 'List<AWS::EC2::Subnet::Id>'
-    Description: A list of subnets for the Auto Scaling group    
+    Type: List<AWS::EC2::Subnet::Id> # define a subnet onde sera feito o deploy
+    Description: A list of subnets for the Auto Scaling group
 Resources:
   DbSg:
-    Type: AWS::EC2::SecurityGroup
+    # cria um novo recurso chamado DbSg
+    Type: AWS::EC2::SecurityGroup # cria um SG
     Properties:
-      GroupDescription: !Sub "Security Group for RDS Instance"
+      GroupDescription: !Sub Security Group for RDS Instance # descricao simples
       SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: !Ref RdsPort
-          ToPort: !Ref RdsPort
-          CidrIp: 0.0.0.0/0
+        # regras de entrada
+        - IpProtocol: tcp # permite trafego TCP
+          FromPort: !Ref RdsPort # define a porta como o valor salvo em RdsPort
+          ToPort: !Ref RdsPort # define a porta como o valor salvo em RdsPort
+          CidrIp: 0.0.0.0/0 # acesso publico
       SecurityGroupEgress:
-        - IpProtocol: -1
-          FromPort: -1
-          ToPort: -1
-          CidrIp: 0.0.0.0/0
-      VpcId: !Ref VpcId
+        # regras de saida
+        - IpProtocol: -1 # todos os protocolos
+          FromPort: -1 # todas as portas
+          ToPort: -1 # todas as portas
+          CidrIp: 0.0.0.0/0 # acesso publico
+      VpcId: !Ref VpcId # define a VPC com o valor armazenado em VpcId
   DBSubnetGroup:
-    Type: AWS::RDS::DBSubnetGroup
+    # cria um grupo de subnet
+    Type: AWS::RDS::DBSubnetGroup # subnet para o RDS
     Properties:
-      DBSubnetGroupDescription: "My DB Subnet Group"
-      SubnetIds: !Ref Subnets
+      DBSubnetGroupDescription: My DB Subnet Group # descricao simples
+      SubnetIds: !Ref Subnets # usa como subnet o valor armazenado em Subnets
 
   RdsInstance:
     Type: AWS::RDS::DBInstance
-    DeletionPolicy: 'Delete'
-    UpdateReplacePolicy: 'Delete'
+    DeletionPolicy: Delete # se a stack for excluida tambem exclui o RDS
+    UpdateReplacePolicy: Delete # exclui o antigo para criar o novo
     Properties:
-      MasterUsername: !Ref Username
-      MasterUserPassword: !Ref Password
-      DBSubnetGroupName: !Ref DBSubnetGroup
-      AllocatedStorage: '20'
-      AllowMajorVersionUpgrade: true
-      AutoMinorVersionUpgrade: true
+      MasterUsername: !Ref Username # define o master com o valor definido em Username
+      MasterUserPassword: !Ref Password # define a senha do master com o valor definido em Password
+      DBSubnetGroupName: !Ref DBSubnetGroup # define o nome do grupo com o valor em DBSubnetGroup
+      AllocatedStorage: '20' # espaco usado pelo RDS
+      AllowMajorVersionUpgrade: true # permite atualizacoes maiores
+      AutoMinorVersionUpgrade: true # permite atualizacoes menores
       # This should be turned off When using AuthIAM on the Proxy.
-      Port: !Ref RdsPort
-      EnableIAMDatabaseAuthentication: false
-      BackupRetentionPeriod: !Ref BackupRetentionPeriod
-      DBInstanceClass: !Ref InstanceClass
-      DBName: !Ref RdsDatabaseName
-      Engine: !Ref Engine
-      DeletionProtection: !Ref DeletionProtection
-      EngineVersion: !Ref EngineVersion
-      PubliclyAccessible: !Ref PubliclyAccessible
+      Port: !Ref RdsPort # define a porta com o valor de RdsPort
+      EnableIAMDatabaseAuthentication: false # desativa a autenticacao com IAM
+      BackupRetentionPeriod: !Ref BackupRetentionPeriod # usa o valor de backup definido
+      DBInstanceClass: !Ref InstanceClass # usa o valor de InstanceClass definido
+      DBName: !Ref RdsDatabaseName # usa o valor de RdsDatabaseName definido
+      Engine: !Ref Engine # usa a tecnologia definida
+      DeletionProtection: !Ref DeletionProtection # usa a protecao de exclusao definida
+      EngineVersion: !Ref EngineVersion # usa a versao definida
+      PubliclyAccessible: !Ref PubliclyAccessible # usa o valor definido para publico
       VPCSecurityGroups:
-        - !GetAtt DbSg.GroupId
-Outputs:
+        - !GetAtt DbSg.GroupId # usa o SG criado
+Outputs: # exibe as saidas
   StackName:
-    Value: !Ref AWS::StackName
+    Value: !Ref AWS::StackName # exibe o nome da stack
   RdsUsername:
-    Value: !Ref Username
+    Value: !Ref Username # exibe o nome do usuario
     Export:
-      Name: !Sub ${AWS::StackName}RdsUsername
+      Name: !Sub ${AWS::StackName}RdsUsername # exporta o nome do usuario
   RdsPort:
-    Value: !Ref RdsPort
+    Value: !Ref RdsPort # exibe o numero da porta
     Export:
-      Name: !Sub ${AWS::StackName}RdsPort
+      Name: !Sub ${AWS::StackName}RdsPort # exporta o numero da porta
   RdsDatabaseName:
-    Value: !Ref RdsDatabaseName
+    Value: !Ref RdsDatabaseName # exibe o nome do DB
     Export:
-      Name: !Sub ${AWS::StackName}RdsDatabaseName
+      Name: !Sub ${AWS::StackName}RdsDatabaseName # exporta o nome do DB

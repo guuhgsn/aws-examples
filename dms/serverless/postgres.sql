@@ -1,3 +1,5 @@
+-- cria uma tabela simples no Postgre para exemplo
+
 CREATE TABLE example_table (
     id SERIAL PRIMARY KEY,
     name VARCHAR(50),
