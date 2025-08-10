@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-echo "== deploy ec2"
+echo "== deploy ec2" # exibe na tela o que faz o script
 
-STACK_NAME="aws-asg-ec2-basic"
+STACK_NAME="aws-asg-ec2-basic" # salva o nome da stack em uma variavel
 
 # https://awscli.amazonaws.com/v2/documentation/api/latest/reference/cloudformation/deploy/index.html
 aws cloudformation deploy \
@@ -11,3 +11,10 @@ aws cloudformation deploy \
 --no-execute-changeset \
 --region ca-central-1 \
 --stack-name $STACK_NAME
+
+# aws cloudformation deploy - chama a opcao de deploy do CloudFormation
+# --template-file - usa o arquivo de template
+# --capabilities - define a capacidade de criar recursos
+# --no-execute-changeset - nao executa o changeset
+# --region - define a regiao
+# --stack-name - define o nome da stack com o valor armazenado na variavel

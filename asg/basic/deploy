@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-echo "== deploy asg"
+echo "== deploy asg" # exibe na tela o que faz o script
 
-STACK_NAME="asg-basic"
+STACK_NAME="asg-basic" # salva o nome da stack em uma variavel
 
 # https://awscli.amazonaws.com/v2/documentation/api/latest/reference/cloudformation/deploy/index.html
 aws cloudformation deploy \
@@ -11,3 +11,10 @@ aws cloudformation deploy \
 --no-execute-changeset \
 --region ca-central-1 \
 --stack-name $STACK_NAME
+
+# aws cloudformation deploy - chama a funcao de deploy do CloudFormation
+# --template-file - usa o arquivo de template
+# --capabilities - especifica as capacidades do template
+# --no-execute-changeset - nao executa o changeset
+# --region - especifica a regiao
+# --stack-name - especifica o nome da stack com o valor armazenado na variavel

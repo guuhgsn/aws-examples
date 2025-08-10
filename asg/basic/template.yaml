@@ -1,16 +1,16 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: An ALB serving up a web server
-Parameters:
-  VpcId:
+Description: An ALB serving up a web server # descricao simples
+Parameters: # definicao de variaveis
+  VpcId: # define a VPC onde os recursos serao criados
     Type: String
     Default: vpc-08f0ec02f7471b018
-  InstanceType:
+  InstanceType: # define o tipo de instancia
     Type: String
     Default: t3.micro
-  ImageId:
+  ImageId: # defina a AMI
     Type: String
     Default: ami-003c24b59bb839e19
-  Subnets:
+  Subnets: # define a subnet onde os recursos serao criados
     Type: 'List<AWS::EC2::Subnet::Id>'
     Description: A list of subnets for the Auto Scaling group    
     # ca-central-1a
@@ -18,58 +18,58 @@ Parameters:
     Default: "subnet-0d8058cb02f147a86,subnet-0e0fd31733061237d"
 Resources:
   SG:
-    Type: AWS::EC2::SecurityGroup
+    Type: AWS::EC2::SecurityGroup # cria um SG
     Properties:
-      GroupDescription: Allow http to client host
-      VpcId: !Ref VpcId
-      SecurityGroupIngress:
-        - IpProtocol: -1
-          FromPort: -1
-          ToPort: -1
-          CidrIp: 0.0.0.0/0
-      SecurityGroupEgress:
-        - IpProtocol: -1
-          FromPort: -1
-          ToPort: -1
-          CidrIp: 0.0.0.0/0
+      GroupDescription: Allow http to client host # descricao simples
+      VpcId: !Ref VpcId # usa o valor de VpcId
+      SecurityGroupIngress: # regras de entrada
+        - IpProtocol: -1 # todos os protocolos 
+          FromPort: -1 # todas as portas
+          ToPort: -1 # todas as portas
+          CidrIp: 0.0.0.0/0 # acesso publico
+      SecurityGroupEgress: # regras de saida
+        - IpProtocol: -1 # todos os protocolos 
+          FromPort: -1 # todas as portas
+          ToPort: -1 # todas as portas
+          CidrIp: 0.0.0.0/0 # acesso publico
   SSMRole:
-    Type: AWS::IAM::Role
+    Type: AWS::IAM::Role # cria uma IAM Role
     Properties:
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
-          - Effect: Allow
+          - Effect: Allow # permite AssumeRole para o EC2
             Principal:
               Service: ec2.amazonaws.com
             Action: sts:AssumeRole
       ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore # ARN da policy
   EC2InstanceProfile:
-    Type: AWS::IAM::InstanceProfile
+    Type: AWS::IAM::InstanceProfile # cria um profile do IAM para a instancia
     Properties:
       Roles:
-        - !Ref SSMRole
+        - !Ref SSMRole # usa o valor de SSMRole
   LaunchTemplate:
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-launchtemplate.html
-    Type: AWS::EC2::LaunchTemplate
+    Type: AWS::EC2::LaunchTemplate # cria um template 
     Properties:
       # LaunchTemplateName: MyLaunchTemplate
       # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-launchtemplate-launchtemplatedata.html
       LaunchTemplateData:
         IamInstanceProfile:
-          Arn: !GetAtt EC2InstanceProfile.Arn
-        ImageId: !Ref ImageId
-        InstanceType: !Ref InstanceType
+          Arn: !GetAtt EC2InstanceProfile.Arn # usa o valor de EC2InstanceProfile
+        ImageId: !Ref ImageId # usa o valor de ImageId
+        InstanceType: !Ref InstanceType # usa o valor de InstanceType
         #SecurityGroups:
         #  - !Ref SG
         NetworkInterfaces:
           # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-launchtemplate-networkinterface.html
-          - DeviceIndex: 0
-            AssociatePublicIpAddress: true
+          - DeviceIndex: 0 # usa a primeira interface de rede (eth0)
+            AssociatePublicIpAddress: true # habilita a associacao de IP Publico
             Groups:
-              - !GetAtt SG.GroupId
-            DeleteOnTermination: true
-        UserData:
+              - !GetAtt SG.GroupId # usa o valor de SG.GroupId
+            DeleteOnTermination: true # exclui a instancia quando estiver no modo Termination
+        UserData: # script que roda no boot
           Fn::Base64: |
             #!/bin/bash
             yum update -y
@@ -79,11 +79,11 @@ Resources:
             echo "<html><body><h1>Hello from Apache on Amazon Linux 2!</h1></body></html>" > /var/www/html/index.html
   ASG:
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-autoscaling-autoscalinggroup.html
-    Type: AWS::AutoScaling::AutoScalingGroup
+    Type: AWS::AutoScaling::AutoScalingGroup # cria uma regra de auto scaling
     Properties:
       LaunchTemplate:
-        LaunchTemplateId: !Ref LaunchTemplate
-        Version: !GetAtt LaunchTemplate.LatestVersionNumber
-      MaxSize: '1'
-      MinSize: '1'
-      VPCZoneIdentifier: !Ref Subnets
+        LaunchTemplateId: !Ref LaunchTemplate # usa o ID do template criado
+        Version: !GetAtt LaunchTemplate.LatestVersionNumber # usa a versao mais recente do template
+      MaxSize: '1' # minimo de instancias em execucao
+      MinSize: '1' # maximo de instancias em execucao
+      VPCZoneIdentifier: !Ref Subnets # usa o valor de Subnets

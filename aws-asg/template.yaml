@@ -1,33 +1,33 @@
 AWSTemplateFormatVersion: "2010-09-09"
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html
-Parameters:
-  InstanceType:
+Parameters: # definicao de variaveis
+  InstanceType: # define o tipo de instancia
     Type: String
     Default: t3.micro
-  VpcId:
+  VpcId: # define a VPC onde sera criado o recurso
     Type: String
     Default: vpc-08f0ec02f7471b018
-  ImageId:
+  ImageId: # defina a AMI que sera utilizada
     Type: String
     # ca-central-1 AMI
     Default: ami-07413789aae50b0e0
-  SubnetId:
+  SubnetId: # define a subnet onde sera criado o recurso
     Type: String
     Default: subnet-0e0fd31733061237d
-Resources:
+Resources: # define os recursos que serao criados
   MyEC2Instance: 
-    Type: AWS::EC2::Instance
+    Type: AWS::EC2::Instance # cria uma instancia do EC2
     Properties: 
-      InstanceType: !Ref InstanceType
-      ImageId: !Ref ImageId
-      NetworkInterfaces:
-        - DeviceIndex: 0
-          SubnetId: !Ref SubnetId
-          AssociatePublicIpAddress: true
+      InstanceType: !Ref InstanceType # usa o valor de InstanceType
+      ImageId: !Ref ImageId # usa o valor de ImageId
+      NetworkInterfaces: 
+        - DeviceIndex: 0 # configura para usar a primeira interface de rede da instancia (eth0)
+          SubnetId: !Ref SubnetId # usa o valor de SubnetId
+          AssociatePublicIpAddress: true # associa IP Publico
           GroupSet:
-            - !GetAtt SG.GroupId
-          DeleteOnTermination: true
-      UserData:
+            - !GetAtt SG.GroupId # associa o grupo de seguranca
+          DeleteOnTermination: true # define que a instancia deve ser deletada ao terminar a instancia
+      UserData: # script que roda no boot
         Fn::Base64: |
           #!/bin/bash
           yum update -y
@@ -36,17 +36,17 @@ Resources:
           systemctl enable httpd
           echo "<html><body><h1>Hello from Apache on Amazon Linux 2!</h1></body></html>" > /var/www/html/index.html
   SG:
-    Type: AWS::EC2::SecurityGroup
+    Type: AWS::EC2::SecurityGroup # cria um SG
     Properties:
-      GroupDescription: Allow http to client host
-      VpcId: !Ref VpcId
-      SecurityGroupIngress:
-        - IpProtocol: -1
-          FromPort: -1
-          ToPort: -1
-          CidrIp: 0.0.0.0/0
-      SecurityGroupEgress:
-        - IpProtocol: -1
-          FromPort: -1
-          ToPort: -1
-          CidrIp: 0.0.0.0/0
+      GroupDescription: Allow http to client host # descricao simples
+      VpcId: !Ref VpcId # usa o valor de VpcId
+      SecurityGroupIngress: # trafego de entrada
+        - IpProtocol: -1 # todos os protocolos
+          FromPort: -1 # todas as portas
+          ToPort: -1 # todas as portas
+          CidrIp: 0.0.0.0/0 # acesso publico
+      SecurityGroupEgress: # trafego de saida
+        - IpProtocol: -1 # todos os protocolos
+          FromPort: -1 # todas as portas
+          ToPort: -1 # todas as portas
+          CidrIp: 0.0.0.0/0 # acesso publico
