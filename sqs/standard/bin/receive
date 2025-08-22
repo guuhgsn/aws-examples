@@ -3,8 +3,9 @@ echo "== receive" # exibe na tela o que faz o script
 
 root_path=$(realpath .) # caminho absoluto do diretorio atual
 
-QUEUE_URL=https://sqs.ca-central-1.amazonaws.com/982383527471/sqs-fifo-MyQueue-TFdtzZeh3R0e.fifo # salva a URL da fila em uma variavel
+QUEUE_URL=https://sqs.ca-central-1.amazonaws.com/982383527471/sqs-standard-MyQueue-ONKfvvgwWJo2 # salva a URL da fila em uma variavel
 
+# https://docs.aws.amazon.com/cli/latest/reference/sqs/receive-message.html
 aws sqs receive-message \
 --queue-url $QUEUE_URL \
 --attribute-names All \

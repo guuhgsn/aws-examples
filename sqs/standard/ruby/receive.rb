@@ -23,3 +23,5 @@ resp.messages.each do |message|
     receipt_handle: handle
   })
 end
+
+# https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SQS/Client.html#receive_message-instance_method

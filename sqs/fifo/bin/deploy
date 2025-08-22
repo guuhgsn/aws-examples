@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-echo "== deploy SQS Standard"
+echo "== deploy SQS Standard" # exibe na tela o que faz o script
 
-STACK_NAME="sqs-fifo"
+STACK_NAME="sqs-fifo" # salva o nome da stack em uma variavel
 
-root_path=$(realpath .)
-template_path="${root_path}/template.yaml"
+root_path=$(realpath .) # caminho absoluto do diretorio atual
+template_path="${root_path}/template.yaml" # define o caminho onde o template deve ser consultado
 
 # https://awscli.amazonaws.com/v2/documentation/api/latest/reference/cloudformation/deploy/index.html
 aws cloudformation deploy \
@@ -14,3 +14,10 @@ aws cloudformation deploy \
 --no-execute-changeset \
 --region ca-central-1 \
 --stack-name $STACK_NAME
+
+# aws cloudformation deploy - comando para implantar um template do CloudFormation
+# --template-file $template_path - o caminho para o arquivo do template do CloudFormation
+# --capabilities capability_named_iam - permissao para criar recursos do iam com nomes personalizados
+# --no-execute-changeset - cria o changeset mas nao o executa, permitindo revisao
+# --region ca-central-1 - a regiao da AWS onde a stack sera implantada
+# --stack-name $stack_name - usa o valor da variavel como nome da stack

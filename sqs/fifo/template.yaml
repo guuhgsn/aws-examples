@@ -1,9 +1,9 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: A Simple SQS queue
-Resources: 
-  MyQueue: 
+Description: A Simple SQS queue # descricao simples do template
+Resources: # os recursos que devem ser criados
+  MyQueue: # nome do recurso
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sqs-queue.html
-    Type: AWS::SQS::Queue
+    Type: AWS::SQS::Queue # cria uma fila no SQS
     Properties: 
-      FifoQueue: true
+      FifoQueue: true # especifica que a fila usara o FIFO
       # QueueName: "StandardQueue"

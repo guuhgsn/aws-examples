@@ -6,3 +6,5 @@ source "https://rubygems.org"
 gem "ox"
 gem "aws-sdk-sqs"
 gem 'pry'
+
+# https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/SQS/Client.html#:~:text=gems/-,aws%2Dsdk%2Dsqs,-/lib/aws%2Dsdk
