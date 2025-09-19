@@ -23,3 +23,6 @@ sam deploy \
   --stack-name "inline-lamba-py" \
   --capabilities "CAPABILITY_IAM"
   #--config-file "$config_path" \
+
+# funciona de forma bem parecida com o CFN
+# SAM - recomendado para serverless

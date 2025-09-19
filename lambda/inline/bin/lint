@@ -9,3 +9,5 @@ root_path=$(realpath .)
 # This will check our cloudformation template to ensure its valid format
 echo "== CFN linting..."
 cfn-lint "${root_path}/template.yml"
+
+# verifica o template criado para validar se esta correto

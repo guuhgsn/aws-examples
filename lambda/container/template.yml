@@ -5,7 +5,7 @@ Resources:
   InlineLambda:
     Type: AWS::Serverless::Function
     Metadata:
-      DockerContext: "../"
-      Dockerfile: Dockerfile
+      DockerContext: "../" # define o caminho do Dockerfile
+      Dockerfile: Dockerfile # nome do arquivo Dockerfile
     Properties:
-      PackageType: Image
+      PackageType: Image # define que a funcao sera empacotada em uma imagem Docker

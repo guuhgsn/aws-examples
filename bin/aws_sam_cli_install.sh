@@ -4,3 +4,6 @@ curl -L "https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli
 unzip samcli.zip -d sam-installation
 sudo ./sam-installation/install
 cd $THEIA_WORKSPACE_ROOT
+
+# instala o SAM CLI
+# $THEIA_WORKSPACE_ROOT - define a pasta principal do projeto no AWS Cloud9 (necessario alterar) 

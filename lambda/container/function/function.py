@@ -2,7 +2,7 @@ import json
 from faker import Faker
 
 def handler(event, context):
-    fake = Faker()
+    fake = Faker() # usa a biblioteca faker para gerar um nome falso aleatorio no message
     message = 'Hello {}!'.format(fake.name())  
     info = {
         "Type": "Container Example",

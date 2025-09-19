@@ -17,3 +17,5 @@ echo "== SAM build..."
 echo "using template: ${template_path}"
 sam build \
   --template-file "${template_path}"
+
+# cria a funcao com base no template

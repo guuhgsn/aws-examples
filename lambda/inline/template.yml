@@ -1,13 +1,13 @@
 AWSTemplateFormatVersion : '2010-09-09'
-Transform: AWS::Serverless-2016-10-31
+Transform: AWS::Serverless-2016-10-31 # SAM
 Resources:
   # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html
   InlineLambda:
-    Type: AWS::Serverless::Function
+    Type: AWS::Serverless::Function # especifica que sera criada uma Function
     Properties:
-      Handler: index.handler
-      Runtime: python3.12
-      PackageType: Zip
+      Handler: index.handler # funcao dentro do codigo que o Lambda inicia a execucao
+      Runtime: python3.12 # a tecnologia que roda
+      PackageType: Zip # tipo de pacote de implementacao
       InlineCode: |
         def handler(event, context):
             message = 'Hello {} {}!'.format(event['first_name'], event['last_name'])  

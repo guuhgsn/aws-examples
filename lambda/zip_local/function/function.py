@@ -6,7 +6,7 @@ def handler(event, context):
         "Type": "Zip Inline",
         "Version": 1
     }
-    info_json = json.dumps(info)
+    info_json = json.dumps(info) # transforma em JSON as informacoes dentro de info
     print(info_json)
     return { 
         'message' : message

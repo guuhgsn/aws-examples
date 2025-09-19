@@ -32,3 +32,5 @@ sam package \
   --template-file "$template_path" \
   --output-template-file $output_template_path \
   --s3-prefix "zip-package-python"
+
+# --s3-prefix "zip-package-python" - prefixo do nome da pasta no S3

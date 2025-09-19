@@ -25,3 +25,5 @@ sam deploy \
   --stack-name "zip-local-lamba-py" \
   --capabilities "CAPABILITY_IAM" \
   --config-file "$config_path"
+
+# $config_path - especifica o caminho do samconfig.toml e o usa no deploy

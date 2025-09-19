@@ -5,3 +5,10 @@ aws ecr create-repository \
   --repository-name python-container-example \
   --image-tag-mutability IMMUTABLE \
   --image-scanning-configuration scanOnPush=true
+
+# https://docs.aws.amazon.com/cli/latest/reference/ecr/create-repository.html
+
+# aws ecr create-repository - chama a opcao de criar repositorios no ECR
+# --repository-name python-container-example - nome do repositorio no ECR
+# --image-tag-mutability IMMUTABLE - define que as tags de imagem sao imutaveis
+# --image-scanning-configuration scanOnPush=true - automaticamente escaneia as imagens quando elas sao enviadas para o ECR
