@@ -1,10 +1,12 @@
 # Create Serverless Cache
 
+```sh
 aws elasticache create-serverless-cache \
 --serverless-cache-name my-cache-ab-5252 \
- --major-engine-version 7
+--major-engine-version 7
+```
 
- # Install Redis Client (Ubuntu)
+# Install Redis Client (Ubuntu)
 
 ```sh
 sudo apt-get install redis -y
