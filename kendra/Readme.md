@@ -4,9 +4,15 @@ chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://e-school.kmutt.ac.th
 
 ## Create bucket
 
-aws s3 mb s3://kendra-exp-223 --region us-east-1
+```sh
+aws s3 mb s3://kendra-exp-223 \
+--region us-east-1
+
 cd split
-aws s3 sync . s3://kendra-exp-223 --region us-east-1
+
+aws s3 sync . s3://kendra-exp-223 \
+--region us-east-1
+```
 
 ## Creating our Index
 
@@ -17,10 +23,13 @@ aws kendra create-index \
 --description "My Index" \
 --region us-east-1 \
 --role-arn arn:aws:iam::982383527471:role/KendraIndexRole
+
+# se o --edition nao for definido ele usara o padrao que e o ENTERPRISE_EDITION
 ```
 
 ## Creating our Data Source
 
+```sh
 aws kendra create-data-source \
 --index-id 62b0d9f1-b38b-44a6-8152-ff7427fdff08 \
 --name my-data-source \
@@ -28,8 +37,7 @@ aws kendra create-data-source \
 --type S3 \
 --configuration '{"S3Configuration":{"BucketName": "kendra-exp-223"}}' \
 --region us-east-1
-
-
+```
 
 ## Sync
 
@@ -38,6 +46,8 @@ aws kendra start-data-source-sync-job \
 --id e3ceb99f-8574-4ff7-95c7-2e113c2ffc75 \
 --index-id 62b0d9f1-b38b-44a6-8152-ff7427fdff08 \
 --region us-east-1
+
+# --id sera o data source id retornado na criacao do data source
 ```
 
 # Query
