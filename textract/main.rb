@@ -16,3 +16,5 @@ resp = client.analyze_document({
   feature_types: ["TABLES"] 
 })
 #binding.pry
+
+# https://docs.aws.amazon.com/sdk-for-ruby/v3/api/Aws/Textract.html
