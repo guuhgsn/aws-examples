@@ -1,1 +1,4 @@
-data/*.csv
+# Ignore files
+
+*.csv
+*.json

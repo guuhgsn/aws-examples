@@ -1,30 +1,37 @@
-# S3 Bucket
+# AWS Glue - Data Catalog Example
 
+## S3 Bucket
+
+```sh
 aws s3 mb s3://glue-data-catalog-6163
+```
 
-# Download Data File
+## Download Data File
 
-We can get data from here:
-
-https://catalog.data.gov/dataset/electric-vehicle-population-data
+> We can get data from here:
+> 
+> 
+> 
+> https://catalog.data.gov/dataset/electric-vehicle-population-data
 
 ```sh
 curl https://data.wa.gov/api/views/f6w7-q2d2/rows.csv?accessType=DOWNLOAD -o vehicle.csv
 ```
 
-# Upload data to S3 bucket
+## Upload data to S3 bucket
 
 ```sh
 aws s3 cp data/vehicle.csv s3://glue-data-catalog-6163/data/vehicle.csv
 ```
 
-# AWS Glue Database
+## AWS Glue Database
 
 ```sh
-aws glue create-database --database-input Name=mydatabase
+aws glue create-database \
+--database-input Name=mydatabase
 ```
 
-# Create IAM Role
+## Create IAM Role
 
 ```sh
 aws iam create-role \
@@ -45,9 +52,9 @@ aws iam attach-role-policy \
 --policy-arn arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole
 ```
 
-# Create Glue Crawler
+## Create Glue Crawler
 
-https://awscli.amazonaws.com/v2/documentation/api/latest/reference/glue/create-crawler.html
+> https://awscli.amazonaws.com/v2/documentation/api/latest/reference/glue/create-crawler.html
 
 ```sh
 aws glue create-crawler \
