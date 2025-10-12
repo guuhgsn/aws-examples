@@ -1,7 +1,6 @@
-
 ## Mongo Shell Ubuntu (Jammy)
 
-Get version of ubuntu
+Get version of Ubuntu
 
 https://www.mongodb.com/docs/mongodb-shell/install/
 https://www.mongodb.com/docs/mongodb-shell/run-commands/

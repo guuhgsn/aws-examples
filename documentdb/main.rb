@@ -4,7 +4,12 @@ require 'pry'
 def insert_one collection
   doc = {
     name: 'Steve',
-    hobbies: [ 'hiking', 'tennis', 'fly fishing' ],
+    hobbies: 
+      [ 
+        'hiking', 
+        'tennis', 
+        'fly fishing' 
+      ],
     siblings: {
       brothers: 0,
       sisters: 1
@@ -15,12 +20,38 @@ def insert_one collection
 end
 
 def insert_many collection
-  docs = [ { _id: 1, name: 'Steve',
-           hobbies: [ 'hiking', 'tennis', 'fly fishing' ],
-           siblings: { brothers: 0, sisters: 1 } },
-         { _id: 2, name: 'Sally',
-                 hobbies: ['skiing', 'stamp collecting' ],
-                 siblings: { brothers: 1, sisters: 0 } } ]
+  docs = [ 
+          { 
+            _id: 1, 
+            name: 'Steve',
+            hobbies: 
+              [ 
+                'hiking', 
+                'tennis', 
+                'fly fishing' 
+              ],
+            siblings: 
+              { 
+                brothers: 0, 
+                sisters: 1 
+              } 
+          },
+          { 
+            _id: 2, 
+            name: 'Sally',
+                 
+            hobbies: 
+              [
+                'skiing', 
+                'stamp collecting' 
+              ],
+            siblings: 
+              { 
+                brothers: 1, 
+                sisters: 0 
+              } 
+          } 
+        ]
   result = collection.insert_many(docs)
   puts result.inserted_count
 end
