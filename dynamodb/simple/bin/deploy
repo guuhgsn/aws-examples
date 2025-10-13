@@ -2,6 +2,7 @@
 set -e
 
 # we need the absolute path because relative path was giving us trouble
+
 root_path=$(realpath .)
 #config_path="$(realpath ..)/python.toml"
 
@@ -11,10 +12,12 @@ root_path=$(realpath .)
 #fi
 
 # sam deploy
+
 # ===================
 # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-deploying.html
 # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-deploy.html
-# -------------------
+# ===================
+
 echo "== SAM deploy..."
 #echo "loading configuration: $config_path"
 
