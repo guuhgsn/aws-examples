@@ -1,12 +1,12 @@
-AWSTemplateFormatVersion: "2010-09-09"
+AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
   MyPassword:
     Type: String
-    NoEcho: true
+    NoEcho: true # Hides the parameter value in the AWS Management Console and CLI output
 Resources:
   MySecretPassed:
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html
-    Type: 'AWS::SecretsManager::Secret'
+    Type: AWS::SecretsManager::Secret
     Properties:
       # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-secretsmanager-secret-generatesecretstring.html
       SecretString: !Ref MyPassword

@@ -1,3 +1,6 @@
+# retorna a secret criada anteriormente usando o AWS SDK for Ruby com o Secrets Manager
+# usa o secret_id como parametro para buscar a secret
+
 # Use this code snippet in your app.
 # If you need more information about configurations or implementing the sample code, visit the AWS docs:
 # https://aws.amazon.com/developer/language/ruby/
